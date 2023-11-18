@@ -1,0 +1,35 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://assets/sprites/SS_drillEnemy2.png" type="Texture" id=1]
+[ext_resource path="res://scripts/enemy/HeatMissileFireTrail.gd" type="Script" id=2]
+
+[sub_resource type="CapsuleShape2D" id=2]
+radius = 7.0
+height = 12.0
+
+[sub_resource type="CanvasItemMaterial" id=1]
+blend_mode = 1
+light_mode = 2
+
+[node name="HeatMissileFireTrail" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="Hurtbox" type="Area2D" parent="."]
+collision_layer = 16
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2( 0, -8 )
+shape = SubResource( 2 )
+
+[node name="SpriteAnchor" type="Node2D" parent="."]
+
+[node name="Sprite" type="Sprite" parent="SpriteAnchor"]
+modulate = Color( 0.996078, 0.509804, 0.0784314, 1 )
+material = SubResource( 1 )
+position = Vector2( 8, -6 )
+scale = Vector2( 0.744253, 0.833333 )
+texture = ExtResource( 1 )
+hframes = 5
+
+[connection signal="area_entered" from="Hurtbox" to="." method="_on_Hurtbox_area_entered"]

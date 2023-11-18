@@ -1,0 +1,23 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/snd_weapon_subshot2.wav-7e7072c73c5a62ca267bcb597b24b3d4.sample"
+
+[deps]
+
+source_file="res://assets/audio/player/weapon/snd_weapon_subshot2.wav"
+dest_files=[ "res://.import/snd_weapon_subshot2.wav-7e7072c73c5a62ca267bcb597b24b3d4.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

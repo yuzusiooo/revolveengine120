@@ -1,0 +1,118 @@
+[gd_scene load_steps=12 format=2]
+
+[ext_resource path="res://scripts/player/Player2.gd" type="Script" id=1]
+[ext_resource path="res://nodes/player/machine/PowershotMachine.tscn" type="PackedScene" id=2]
+[ext_resource path="res://assets/audio/player/pickup/snd_medal_pickup2.wav" type="AudioStream" id=3]
+[ext_resource path="res://assets/audio/player/pickup/snd_weapongem_pickup.wav" type="AudioStream" id=4]
+[ext_resource path="res://assets/audio/player/snd_player_hit3.wav" type="AudioStream" id=5]
+[ext_resource path="res://assets/sprites/ss_playerHitbox.png" type="Texture" id=6]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 5.0
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 6.0
+
+[sub_resource type="Animation" id=4]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0 ]
+}
+
+[sub_resource type="Animation" id=5]
+resource_name = "loop"
+length = 0.666667
+loop = true
+step = 0.0416667
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 1, 2, 3, 4, 5, 6, 7 ]
+}
+
+[sub_resource type="CircleShape2D" id=3]
+radius = 135.0
+
+[node name="Player" type="KinematicBody2D"]
+script = ExtResource( 1 )
+moveSpeed = 500.0
+WeaponGemPickupSFX = ExtResource( 4 )
+MedalPickupSFX = ExtResource( 3 )
+PlayerTakeDamageSFX = ExtResource( 5 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 24
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource( 2 )
+
+[node name="PlayerHitSFX" type="AudioStreamPlayer" parent="Hitbox"]
+
+[node name="Sprite" type="Sprite" parent="Hitbox"]
+z_index = 10
+texture = ExtResource( 6 )
+hframes = 8
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Hitbox"]
+autoplay = "loop"
+anims/RESET = SubResource( 4 )
+anims/loop = SubResource( 5 )
+
+[node name="WorldCollision" type="Area2D" parent="."]
+visible = false
+collision_layer = 2
+collision_mask = 33
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WorldCollision"]
+shape = SubResource( 2 )
+
+[node name="ItemPickupRange" type="Area2D" parent="."]
+visible = false
+collision_layer = 2
+collision_mask = 32
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ItemPickupRange"]
+shape = SubResource( 3 )
+
+[node name="ItemPickupSFX" type="AudioStreamPlayer" parent="ItemPickupRange"]
+
+[node name="PlayerMachine" type="Node2D" parent="."]
+
+[node name="PowershotMachine" parent="PlayerMachine" instance=ExtResource( 2 )]
+
+[node name="Weapon" parent="PlayerMachine/PowershotMachine" index="1"]
+visible = false
+
+[node name="FirePoint4" parent="PlayerMachine/PowershotMachine/Weapon/MainWeapon/Level 2" index="3"]
+position = Vector2( 50, -20 )
+
+[node name="FirePoint5" parent="PlayerMachine/PowershotMachine/Weapon/MainWeapon/Level 2" index="4"]
+position = Vector2( 50, 20 )
+
+[connection signal="area_entered" from="ItemPickupRange" to="." method="_on_ItemPickupRange_area_entered"]
+[connection signal="toggle_useSubWeapon" from="PlayerMachine/PowershotMachine/Weapon" to="." method="_on_Weapon_toggle_useSubWeapon"]
+[connection signal="weapon_levelup" from="PlayerMachine/PowershotMachine/Weapon" to="." method="sig_weapon_levelup"]
+[connection signal="weapon_xpGain" from="PlayerMachine/PowershotMachine/Weapon" to="." method="sig_weapon_xpGain"]
+
+[editable path="PlayerMachine/PowershotMachine"]

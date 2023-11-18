@@ -1,0 +1,576 @@
+[gd_scene load_steps=44 format=2]
+
+[ext_resource path="res://assets/sprites/ss_newPlayer_003.png" type="Texture" id=1]
+[ext_resource path="res://assets/sprites/vfx/vfx_rodSpark.png" type="Texture" id=2]
+[ext_resource path="res://assets/sprites/vfx/ss_vfx_box.png" type="Texture" id=3]
+[ext_resource path="res://assets/sprites/vfx/vfx_spark.png" type="Texture" id=4]
+[ext_resource path="res://assets/sprites/SS_vfx_explosion.png" type="Texture" id=5]
+[ext_resource path="res://assets/sprites/vfx/vfx_rodSpark_small.png" type="Texture" id=6]
+[ext_resource path="res://scripts/vfx/particles/player/PlayerGameover.gd" type="Script" id=7]
+[ext_resource path="res://assets/audio/player/snd_dyinganim_1.wav" type="AudioStream" id=8]
+[ext_resource path="res://assets/audio/player/snd_dyinganim_2.wav" type="AudioStream" id=9]
+
+[sub_resource type="CanvasItemMaterial" id=17]
+blend_mode = 1
+particles_animation = true
+particles_anim_h_frames = 3
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="Gradient" id=18]
+interpolation_mode = 2
+offsets = PoolRealArray( 0.56129, 0.870968 )
+colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 0 )
+
+[sub_resource type="GradientTexture" id=19]
+gradient = SubResource( 18 )
+
+[sub_resource type="Curve" id=20]
+_data = [ Vector2( 0.522472, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=21]
+curve = SubResource( 20 )
+
+[sub_resource type="ParticlesMaterial" id=22]
+lifetime_randomness = 1.0
+emission_shape = 1
+emission_sphere_radius = 27.61
+flag_disable_z = true
+direction = Vector3( 0, -1, 0 )
+initial_velocity = 99.01
+orbit_velocity = 0.1
+orbit_velocity_random = 1.0
+damping = 200.0
+scale_random = 1.0
+scale_curve = SubResource( 21 )
+color = Color( 0, 0.168627, 0.231373, 1 )
+color_ramp = SubResource( 19 )
+hue_variation = 0.14
+hue_variation_random = 1.0
+anim_speed = 5.0
+
+[sub_resource type="CanvasItemMaterial" id=34]
+blend_mode = 1
+light_mode = 1
+particles_animation = true
+particles_anim_h_frames = 6
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="Gradient" id=35]
+interpolation_mode = 2
+offsets = PoolRealArray( 0.148387, 0.316129, 0.419355, 0.593548, 0.735484 )
+colors = PoolColorArray( 0.987793, 0.95983, 0.829592, 1, 1, 0.75293, 0, 1, 0.988235, 0.584314, 0.152941, 1, 0.380392, 0.294118, 0.203922, 1, 0.596078, 0.541176, 0.482353, 0 )
+
+[sub_resource type="GradientTexture" id=4]
+gradient = SubResource( 35 )
+
+[sub_resource type="ParticlesMaterial" id=36]
+emission_shape = 1
+emission_sphere_radius = 75.0
+flag_rotate_y = true
+flag_disable_z = true
+direction = Vector3( 0, -1, 0 )
+initial_velocity = 69.23
+orbit_velocity = 0.09
+orbit_velocity_random = 0.0
+angle_random = 1.0
+color_ramp = SubResource( 4 )
+anim_speed = 3.0
+
+[sub_resource type="CanvasItemMaterial" id=37]
+light_mode = 1
+
+[sub_resource type="Gradient" id=29]
+interpolation_mode = 2
+offsets = PoolRealArray( 0, 0.296774, 0.987097 )
+colors = PoolColorArray( 1, 1, 1, 1, 1, 0.726562, 0, 1, 0, 0.815686, 0.968627, 0.486275 )
+
+[sub_resource type="GradientTexture" id=30]
+gradient = SubResource( 29 )
+
+[sub_resource type="Curve" id=31]
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 0.280899, 0.0954546 ), 0.0, 0.0, 0, 0, Vector2( 0.47191, 1 ), 0.0, 0.0, 0, 0, Vector2( 0.730337, 0.225 ), 0.0, 0.0, 0, 0, Vector2( 1, 0.543182 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=32]
+curve = SubResource( 31 )
+
+[sub_resource type="ParticlesMaterial" id=33]
+emission_shape = 1
+emission_sphere_radius = 24.09
+flag_align_y = true
+flag_rotate_y = true
+flag_disable_z = true
+spread = 180.0
+initial_velocity = 207.92
+angular_velocity = 720.0
+angular_velocity_random = 1.0
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+linear_accel = 100.0
+damping = 500.0
+scale_random = 1.0
+scale_curve = SubResource( 32 )
+color_ramp = SubResource( 30 )
+
+[sub_resource type="Gradient" id=41]
+offsets = PoolRealArray( 0, 0.496774 )
+colors = PoolColorArray( 1, 1, 1, 1, 1, 0, 0, 1 )
+
+[sub_resource type="GradientTexture" id=42]
+gradient = SubResource( 41 )
+
+[sub_resource type="Curve" id=38]
+max_value = 3.0
+_data = [ Vector2( 0, 3.13636 ), 0.0, -7.71016, 0, 0, Vector2( 1, 0.102273 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=39]
+curve = SubResource( 38 )
+
+[sub_resource type="ParticlesMaterial" id=40]
+emission_shape = 1
+emission_sphere_radius = 13.51
+flag_align_y = true
+flag_disable_z = true
+direction = Vector3( 0, -1, 0 )
+spread = 169.75
+gravity = Vector3( 0, 50, 0 )
+initial_velocity = 118.81
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+scale = 0.5
+scale_curve = SubResource( 39 )
+color_ramp = SubResource( 42 )
+hue_variation = 0.08
+hue_variation_random = 1.0
+
+[sub_resource type="Gradient" id=12]
+interpolation_mode = 2
+offsets = PoolRealArray( 0, 0.387097, 1 )
+colors = PoolColorArray( 1, 0.823059, 0.128906, 1, 1, 0.10791, 0.015625, 1, 1, 1, 1, 0 )
+
+[sub_resource type="GradientTexture" id=13]
+gradient = SubResource( 12 )
+
+[sub_resource type="Curve" id=14]
+max_value = 3.0
+_data = [ Vector2( 0, 3 ), 0.0, 1.42204, 0, 0, Vector2( 1, 0 ), 0.193323, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=15]
+curve = SubResource( 14 )
+
+[sub_resource type="ParticlesMaterial" id=16]
+emission_shape = 5
+emission_ring_radius = 2.05
+emission_ring_inner_radius = 4.68
+emission_ring_height = 1.0
+emission_ring_axis = Vector3( 0, 0, 1 )
+flag_align_y = true
+flag_rotate_y = true
+flag_disable_z = true
+spread = 180.0
+initial_velocity = 980.32
+angular_velocity = 720.0
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+tangential_accel = 100.0
+damping = 1200.0
+scale = 0.45
+scale_curve = SubResource( 15 )
+color_ramp = SubResource( 13 )
+
+[sub_resource type="CanvasItemMaterial" id=23]
+blend_mode = 1
+particles_animation = true
+particles_anim_h_frames = 3
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="Gradient" id=24]
+offsets = PoolRealArray( 0.329032, 1 )
+colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 0 )
+
+[sub_resource type="GradientTexture" id=25]
+gradient = SubResource( 24 )
+
+[sub_resource type="Curve" id=26]
+_data = [ Vector2( 0.370787, 1 ), 0.0, -2.25763, 0, 0, Vector2( 0.623595, 0.140909 ), -0.898989, -0.898989, 0, 0, Vector2( 1, 0 ), -0.0946808, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=27]
+curve = SubResource( 26 )
+
+[sub_resource type="ParticlesMaterial" id=28]
+lifetime_randomness = 1.0
+emission_shape = 1
+emission_sphere_radius = 6.07
+flag_disable_z = true
+direction = Vector3( 0, -1, 0 )
+spread = 101.58
+initial_velocity = 544.56
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+damping = 1000.0
+angle_random = 1.0
+scale_curve = SubResource( 27 )
+color = Color( 0.709804, 0.054902, 0.054902, 1 )
+color_ramp = SubResource( 25 )
+hue_variation = 0.04
+hue_variation_random = 1.0
+
+[sub_resource type="Animation" id=10]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("PlayerDyingVFX/Digitalboxes:emitting")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ false ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("PlayerDyingVFX/Explosion:emitting")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ false ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("PlayerDyingVFX/Sparks:emitting")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ false ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("PlayerDyingVFX/SparkRod:emitting")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ false ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("PlayerRemainsVFX/flak:emitting")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ false ]
+}
+tracks/5/type = "value"
+tracks/5/path = NodePath("PlayerRemainsVFX/Digitalboxes:emitting")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ false ]
+}
+tracks/6/type = "value"
+tracks/6/path = NodePath("PlayerRemainsVFX/PlayerFadeout:emitting")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ false ]
+}
+tracks/7/type = "value"
+tracks/7/path = NodePath("PlayerDyingVFX:scale")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ) ]
+}
+tracks/8/type = "method"
+tracks/8/path = NodePath(".")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/keys = {
+"times": PoolRealArray(  ),
+"transitions": PoolRealArray(  ),
+"values": [  ]
+}
+tracks/9/type = "value"
+tracks/9/path = NodePath("AudioStreamPlayer2D:stream")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ ExtResource( 8 ) ]
+}
+tracks/10/type = "value"
+tracks/10/path = NodePath("AudioStreamPlayer2D:playing")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ false ]
+}
+
+[sub_resource type="Animation" id=11]
+resource_name = "gameover"
+length = 3.0
+step = 0.0833333
+tracks/0/type = "value"
+tracks/0/path = NodePath("PlayerDyingVFX/Digitalboxes:emitting")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( -0.01, 1.25 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("PlayerDyingVFX/Explosion:emitting")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( -0.01, 1.25 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("PlayerDyingVFX/Sparks:emitting")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( -0.01, 1.25 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("PlayerDyingVFX/SparkRod:emitting")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 1.25 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("PlayerRemainsVFX/flak:emitting")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0, 1.25 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
+}
+tracks/5/type = "value"
+tracks/5/path = NodePath("PlayerRemainsVFX/Digitalboxes:emitting")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 0, 1.25 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
+}
+tracks/6/type = "value"
+tracks/6/path = NodePath("PlayerRemainsVFX/PlayerFadeout:emitting")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/keys = {
+"times": PoolRealArray( 0, 1.25 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
+}
+tracks/7/type = "value"
+tracks/7/path = NodePath("PlayerDyingVFX:scale")
+tracks/7/interp = 2
+tracks/7/loop_wrap = true
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/keys = {
+"times": PoolRealArray( 0, 0.166667 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0.5, 0.5 ), Vector2( 1, 1 ) ]
+}
+tracks/8/type = "method"
+tracks/8/path = NodePath(".")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/keys = {
+"times": PoolRealArray( 1.25 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "dyingVFX_done"
+} ]
+}
+tracks/9/type = "value"
+tracks/9/path = NodePath("AudioStreamPlayer2D:stream")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/keys = {
+"times": PoolRealArray( 0, 1.25 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ ExtResource( 8 ), ExtResource( 9 ) ]
+}
+tracks/10/type = "value"
+tracks/10/path = NodePath("AudioStreamPlayer2D:playing")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+
+[node name="PlayerGameover" type="Node2D"]
+script = ExtResource( 7 )
+
+[node name="PlayerDyingVFX" type="Node2D" parent="."]
+z_index = -1
+
+[node name="Digitalboxes" type="Particles2D" parent="PlayerDyingVFX"]
+material = SubResource( 17 )
+emitting = false
+amount = 50
+randomness = 1.0
+process_material = SubResource( 22 )
+texture = ExtResource( 3 )
+
+[node name="Explosion" type="Particles2D" parent="PlayerDyingVFX"]
+material = SubResource( 34 )
+scale = Vector2( 0.5, 0.5 )
+emitting = false
+amount = 4
+lifetime = 0.7
+speed_scale = 2.0
+randomness = 0.92
+process_material = SubResource( 36 )
+texture = ExtResource( 5 )
+
+[node name="Sparks" type="Particles2D" parent="PlayerDyingVFX"]
+material = SubResource( 37 )
+emitting = false
+amount = 10
+lifetime = 0.5
+speed_scale = 3.0
+randomness = 0.76
+process_material = SubResource( 33 )
+texture = ExtResource( 4 )
+
+[node name="SparkRod" type="Particles2D" parent="PlayerDyingVFX"]
+position = Vector2( 1, -19 )
+emitting = false
+amount = 20
+lifetime = 2.0
+speed_scale = 3.0
+process_material = SubResource( 40 )
+texture = ExtResource( 6 )
+
+[node name="PlayerRemainsVFX" type="Node2D" parent="."]
+z_index = -1
+
+[node name="flak" type="Particles2D" parent="PlayerRemainsVFX"]
+emitting = false
+amount = 30
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource( 16 )
+texture = ExtResource( 2 )
+
+[node name="Digitalboxes" type="Particles2D" parent="PlayerRemainsVFX"]
+material = SubResource( 17 )
+emitting = false
+amount = 23
+one_shot = true
+explosiveness = 1.0
+randomness = 1.0
+process_material = SubResource( 22 )
+texture = ExtResource( 3 )
+
+[node name="PlayerFadeout" type="Particles2D" parent="PlayerRemainsVFX"]
+material = SubResource( 23 )
+emitting = false
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource( 28 )
+texture = ExtResource( 1 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "gameover"
+anims/RESET = SubResource( 10 )
+anims/gameover = SubResource( 11 )
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 8 )
+volume_db = 1.0
+autoplay = true
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]

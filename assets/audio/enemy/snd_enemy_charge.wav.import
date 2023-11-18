@@ -1,0 +1,23 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/snd_enemy_charge.wav-1bbfc8028206d2b88f43a061fb355748.sample"
+
+[deps]
+
+source_file="res://assets/audio/enemy/snd_enemy_charge.wav"
+dest_files=[ "res://.import/snd_enemy_charge.wav-1bbfc8028206d2b88f43a061fb355748.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

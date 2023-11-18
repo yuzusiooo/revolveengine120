@@ -1,0 +1,44 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://scripts/vfx/ParticlesOneShot.gd" type="Script" id=1]
+[ext_resource path="res://assets/sprites/SS_vfx_explosion.png" type="Texture" id=2]
+
+[sub_resource type="CanvasItemMaterial" id=2]
+blend_mode = 1
+light_mode = 1
+particles_animation = true
+particles_anim_h_frames = 6
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="Gradient" id=3]
+interpolation_mode = 2
+offsets = PoolRealArray( 0.148387, 0.316129, 0.419355, 0.593548, 0.735484 )
+colors = PoolColorArray( 0.987793, 0.95983, 0.829592, 1, 1, 0.75293, 0, 1, 0.988235, 0.584314, 0.152941, 1, 0.380392, 0.294118, 0.203922, 1, 0.596078, 0.541176, 0.482353, 0 )
+
+[sub_resource type="GradientTexture" id=4]
+gradient = SubResource( 3 )
+
+[sub_resource type="ParticlesMaterial" id=1]
+emission_shape = 1
+emission_sphere_radius = 30.0
+flag_disable_z = true
+direction = Vector3( 0, 0, 0 )
+orbit_velocity = 0.32
+orbit_velocity_random = 0.0
+color_ramp = SubResource( 4 )
+anim_speed = 3.0
+
+[node name="ParticlesOneShot" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="Particles2D" type="Particles2D" parent="."]
+material = SubResource( 2 )
+scale = Vector2( 0.5, 0.5 )
+emitting = false
+amount = 3
+lifetime = 0.5
+one_shot = true
+explosiveness = 0.5
+process_material = SubResource( 1 )
+texture = ExtResource( 2 )

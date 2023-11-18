@@ -1,0 +1,181 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://scripts/machineselectmenu/MachineSelectMenu.gd" type="Script" id=1]
+[ext_resource path="res://scripts/resources/playerMachine/machine_Powershot.tres" type="Resource" id=2]
+[ext_resource path="res://assets/sprites/SS_playerShip.png" type="Texture" id=3]
+[ext_resource path="res://nodes/vfx/Background.tscn" type="PackedScene" id=4]
+[ext_resource path="res://assets/themes/default.theme" type="Theme" id=5]
+
+[node name="MachineSelectMenu" type="Node2D"]
+script = ExtResource( 1 )
+machineList = [ ExtResource( 2 ) ]
+
+[node name="Background" parent="." instance=ExtResource( 4 )]
+
+[node name="Control" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="CanvasLayer" type="CanvasLayer" parent="Control"]
+
+[node name="MachineList" type="Control" parent="Control/CanvasLayer"]
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_top = -96.0
+margin_right = 192.0
+margin_bottom = 96.0
+theme = ExtResource( 5 )
+
+[node name="CurrentMachine" type="Control" parent="Control/CanvasLayer/MachineList"]
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_left = 8.0
+margin_top = -32.0
+margin_right = 184.0
+margin_bottom = 32.0
+
+[node name="MachineType" type="Label" parent="Control/CanvasLayer/MachineList/CurrentMachine"]
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_top = -32.0
+margin_bottom = -18.0
+text = "MachineType"
+align = 1
+
+[node name="MachineDescriptor" type="Label" parent="Control/CanvasLayer/MachineList/CurrentMachine"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -88.0
+margin_top = -19.5
+margin_right = 88.0
+margin_bottom = 19.5
+text = "Machine Descriptor"
+align = 1
+valign = 1
+autowrap = true
+
+[node name="SelectedMachine" type="Control" parent="Control/CanvasLayer"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -128.0
+margin_top = -152.0
+margin_right = 128.0
+margin_bottom = 152.0
+theme = ExtResource( 5 )
+
+[node name="MachineDetails" type="Control" parent="Control/CanvasLayer/SelectedMachine"]
+margin_top = 56.0
+margin_right = 256.0
+margin_bottom = 184.0
+
+[node name="MachineName" type="Label" parent="Control/CanvasLayer/SelectedMachine/MachineDetails"]
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_top = -40.0
+margin_bottom = -24.0
+text = "MachineName"
+align = 1
+valign = 1
+
+[node name="MainWeaponDesc" type="Label" parent="Control/CanvasLayer/SelectedMachine/MachineDetails"]
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_top = 8.0
+margin_bottom = 24.0
+text = "MainDesc"
+align = 1
+valign = 1
+
+[node name="SubWeaponDesc" type="Label" parent="Control/CanvasLayer/SelectedMachine/MachineDetails"]
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_top = 32.0
+margin_bottom = 48.0
+text = "SubDesc"
+align = 1
+valign = 1
+
+[node name="MachineDemo" type="Control" parent="Control/CanvasLayer/SelectedMachine"]
+margin_top = 120.0
+margin_right = 256.0
+margin_bottom = 312.0
+
+[node name="MachineSashi-e" type="Control" parent="Control/CanvasLayer"]
+margin_left = 320.0
+margin_right = 640.0
+margin_bottom = 320.0
+
+[node name="Navigation" type="Control" parent="Control/CanvasLayer"]
+margin_left = 8.0
+margin_top = 288.0
+margin_right = 632.0
+margin_bottom = 312.0
+theme = ExtResource( 5 )
+
+[node name="ConfirmButton" type="Button" parent="Control/CanvasLayer/Navigation"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -184.0
+margin_top = -20.0
+focus_neighbour_left = NodePath("../ReturnButton")
+text = "Confirm"
+
+[node name="ReturnButton" type="Button" parent="Control/CanvasLayer/Navigation"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = -20.0
+margin_right = 64.0
+focus_neighbour_right = NodePath("../ConfirmButton")
+text = "Return"
+
+[node name="Label" type="Label" parent="Control/CanvasLayer"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -320.0
+margin_top = 16.0
+margin_right = 320.0
+margin_bottom = 30.0
+theme = ExtResource( 5 )
+text = "Select Machine"
+align = 1
+valign = 1
+
+[node name="PlayerMachineDemo" type="Node2D" parent="."]
+position = Vector2( 320, 272 )
+
+[node name="MainWeapon" type="Node2D" parent="PlayerMachineDemo"]
+position = Vector2( 0, -17 )
+rotation = -1.5708
+
+[node name="FirePoint" type="Position2D" parent="PlayerMachineDemo/MainWeapon"]
+position = Vector2( 3, -6 )
+
+[node name="FirePoint2" type="Position2D" parent="PlayerMachineDemo/MainWeapon"]
+position = Vector2( 3, 5 )
+
+[node name="SpriteAnchor" type="Node2D" parent="PlayerMachineDemo"]
+
+[node name="Sprite" type="Sprite" parent="PlayerMachineDemo/SpriteAnchor"]
+position = Vector2( -2.5, 0 )
+texture = ExtResource( 3 )
+hframes = 3
+
+[node name="SubWeapon" type="Node2D" parent="PlayerMachineDemo"]
+position = Vector2( 0, 32 )
+
+[node name="MainWeaponSFX" type="AudioStreamPlayer2D" parent="PlayerMachineDemo"]
+
+[node name="SubWeaponSFX" type="AudioStreamPlayer2D" parent="PlayerMachineDemo"]
+
+[connection signal="pressed" from="Control/CanvasLayer/Navigation/ConfirmButton" to="." method="_on_ConfirmButton_pressed"]
+[connection signal="pressed" from="Control/CanvasLayer/Navigation/ReturnButton" to="." method="_on_ReturnButton_pressed"]

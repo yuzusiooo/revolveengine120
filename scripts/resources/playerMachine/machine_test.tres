@@ -1,0 +1,17 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://scripts/resources/playerMachine/playerMachineres.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+machineName = "Test machine 2"
+machineType = "test"
+machineTypeDescriptor = "test"
+mainWeaponDescription = "test"
+mainWeaponNode = ""
+mainWeaponFireRate = 0.0
+subWeaponDescription = "test"
+subWeaponNode = ""
+subWeaponFireRate = 0.0
+subWeaponMultishot = 0.0
+subWeaponXPUse = 0.0

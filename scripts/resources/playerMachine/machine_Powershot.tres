@@ -1,0 +1,21 @@
+[gd_resource type="Resource" load_steps=4 format=2]
+
+[ext_resource path="res://scripts/resources/playerMachine/playerMachineres.gd" type="Script" id=1]
+[ext_resource path="res://assets/audio/player/weapon/snd_weapon_subshot.wav" type="AudioStream" id=4]
+[ext_resource path="res://assets/audio/player/weapon/snd_weapon_mainshot.wav" type="AudioStream" id=5]
+
+[resource]
+script = ExtResource( 1 )
+machineName = "Test machine 1"
+machineType = "Powershot"
+machineTypeDescriptor = "High damage to a concentrated area"
+mainWeaponDescription = "Twin Machine Guns"
+mainWeaponNode = "res://nodes/player/PlayerBullet.tscn"
+mainWeaponFireRate = 0.1
+mainWeaponSFX = ExtResource( 5 )
+subWeaponDescription = "Tracking Missile Barrage"
+subWeaponNode = "res://nodes/player/PlayerLockonMissile.tscn"
+subWeaponFireRate = 2.0
+subWeaponMultishot = 7.0
+subWeaponXPUse = 5.0
+subWeaponSFX = ExtResource( 4 )

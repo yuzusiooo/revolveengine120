@@ -1,0 +1,300 @@
+[gd_scene load_steps=18 format=2]
+
+[ext_resource path="res://assets/fonts/VCR_OSD_MONO_1.001.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://assets/fonts/UI/DynFont_MultiplierLabel.tres" type="DynamicFont" id=2]
+[ext_resource path="res://scripts/main/HUD.gd" type="Script" id=3]
+[ext_resource path="res://assets/sprites/spr_ui_ammoIcon_gray.png" type="Texture" id=4]
+[ext_resource path="res://assets/themes/HUD.theme" type="Theme" id=5]
+[ext_resource path="res://assets/sprites/UI/UI_multiGauge.png" type="Texture" id=6]
+[ext_resource path="res://assets/sprites/spr_ui_playerHealth.png" type="Texture" id=7]
+
+[sub_resource type="Shader" id=22]
+code = "shader_type canvas_item;
+
+uniform vec4 color : hint_color;
+uniform float flash : hint_range(0.0, 1.0, 0.1);
+uniform float flashRate = 10.0;
+
+void fragment(){
+	vec4 pixel = texture(TEXTURE, UV);
+	COLOR = mix(pixel, color, flash * sin(TIME * flashRate + flash));
+	COLOR.a *= pixel.a;
+}"
+
+[sub_resource type="ShaderMaterial" id=23]
+shader = SubResource( 22 )
+shader_param/color = Color( 1, 1, 1, 1 )
+shader_param/flash = 0.0
+shader_param/flashRate = 10.0
+
+[sub_resource type="Animation" id=3]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=2]
+resource_name = "heartbeat"
+loop = true
+step = 0.0833333
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:scale")
+tracks/0/interp = 0
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5, 0.583333, 0.666667, 0.75, 0.833333 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ), Vector2( 1, 1 ), Vector2( 0.8, 1.2 ), Vector2( 0.85, 1.25 ), Vector2( 1.2, 0.8 ), Vector2( 1, 1 ) ]
+}
+
+[sub_resource type="Shader" id=19]
+code = "shader_type canvas_item;
+render_mode blend_premul_alpha;
+
+uniform bool glow_on = false;
+uniform float glow_width = 2.0;
+uniform float glow_speed = 3.0;
+uniform vec4 aura_color : hint_color;
+uniform sampler2D glow_gradient;
+
+void fragment(){
+	vec4 col = texture(TEXTURE, UV);
+	vec2 ps = TEXTURE_PIXEL_SIZE;
+	float a;
+	float maxa = col.a;
+	float mina = col.a;
+	float glow_width_timed = glow_width * sin(TIME * glow_speed);
+	if (!glow_on){
+		glow_width_timed = 0.0;
+	}
+	
+	// set glow to 4 direction
+	a = texture(TEXTURE, UV + vec2(0.0, -glow_width_timed) * ps).a;
+	maxa = max(a, maxa);
+	mina = min(a, mina);
+	
+	a = texture(TEXTURE, UV + vec2(0.0, glow_width_timed) * ps).a;
+	maxa = max(a, maxa);
+	mina = min(a, mina);
+	
+	a = texture(TEXTURE, UV + vec2(-glow_width_timed, 0.0) * ps).a;
+	maxa = max(a, maxa);
+	mina = min(a, mina);
+	
+	a = texture(TEXTURE, UV + vec2(glow_width_timed, 0.0) * ps).a;
+	maxa = max(a, maxa);
+	mina = min(a, mina);
+	
+	col.rgb *= col.a;
+	COLOR = col;
+	COLOR.rgb += aura_color.rgb * (maxa - mina);
+}
+
+
+//shader_type canvas_item;
+//
+//uniform float scale = 4.0;
+//uniform sampler2D backgroundGradient;
+//uniform vec2 scroll1 = vec2(1, 1);
+//
+//uniform sampler2D noise2;
+//uniform float fireHeight:hint_range(0.0, 1.0);
+//
+//void fragment(){
+//	vec2 textureUV = UV * scale;
+//	vec4 texture1 = texture(TEXTURE, textureUV + TIME * scroll1);
+//
+//	vec2 noiseUV = textureUV;
+//	vec4 noise1 = texture(noise2, noiseUV + TIME * (scroll1 * -1.0));
+//
+//	float energy = texture1.r + (noise1.r * 0.5) - (1.0 - UV.y) * fireHeight;
+//
+//	vec4 color = texture(backgroundGradient, vec2(energy));
+//	COLOR = color;
+//}"
+
+[sub_resource type="GradientTexture" id=21]
+
+[sub_resource type="ShaderMaterial" id=20]
+shader = SubResource( 19 )
+shader_param/glow_on = false
+shader_param/glow_width = 3.0
+shader_param/glow_speed = 5.0
+shader_param/aura_color = Color( 0.921569, 0.592157, 0.168627, 0.690196 )
+shader_param/glow_gradient = SubResource( 21 )
+
+[sub_resource type="DynamicFont" id=18]
+size = 20
+extra_spacing_char = 2
+font_data = ExtResource( 1 )
+
+[sub_resource type="CanvasItemMaterial" id=24]
+blend_mode = 1
+
+[sub_resource type="Theme" id=17]
+
+[node name="HUD" type="Control"]
+margin_top = 16.0
+margin_right = 640.0
+margin_bottom = 121.0
+script = ExtResource( 3 )
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="FPSCounter" type="Label" parent="CanvasLayer"]
+margin_right = 40.0
+margin_bottom = 14.0
+text = "FPS"
+
+[node name="PlayerHP" type="Control" parent="CanvasLayer"]
+margin_left = 24.0
+margin_top = 32.0
+margin_right = 192.0
+margin_bottom = 64.0
+theme = ExtResource( 5 )
+
+[node name="Sprite" type="Sprite" parent="CanvasLayer/PlayerHP"]
+material = SubResource( 23 )
+position = Vector2( 16, 16 )
+texture = ExtResource( 7 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer/PlayerHP"]
+autoplay = "heartbeat"
+anims/RESET = SubResource( 3 )
+anims/heartbeat = SubResource( 2 )
+
+[node name="Label" type="Label" parent="CanvasLayer/PlayerHP"]
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = 40.0
+margin_top = -16.0
+margin_bottom = 16.0
+text = "HP"
+valign = 1
+
+[node name="ParticleSpawnPoint" type="Position2D" parent="CanvasLayer/PlayerHP"]
+position = Vector2( 17, 16 )
+
+[node name="WeaponLevel" type="Control" parent="CanvasLayer"]
+margin_left = 24.0
+margin_top = 64.0
+margin_right = 192.0
+margin_bottom = 96.0
+theme = ExtResource( 5 )
+
+[node name="Label" type="Label" parent="CanvasLayer/WeaponLevel"]
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = 40.0
+margin_top = -16.0
+margin_bottom = 16.0
+text = "LvlStr"
+valign = 1
+
+[node name="Sprite" type="Sprite" parent="CanvasLayer/WeaponLevel"]
+material = SubResource( 20 )
+position = Vector2( 16, 18 )
+texture = ExtResource( 4 )
+
+[node name="TimeLeft" type="Control" parent="CanvasLayer"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_top = 24.0
+margin_bottom = 24.0
+theme = ExtResource( 5 )
+
+[node name="Label" type="Label" parent="CanvasLayer/TimeLeft"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -130.0
+margin_top = -15.0
+margin_right = 130.0
+margin_bottom = 15.0
+text = "Time Left"
+align = 1
+valign = 1
+
+[node name="Score" type="Control" parent="CanvasLayer"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -192.0
+margin_top = 24.0
+margin_right = -16.0
+margin_bottom = 64.0
+theme = ExtResource( 5 )
+
+[node name="LabelAnchor" type="Control" parent="CanvasLayer/Score"]
+margin_left = 88.0
+margin_top = 16.0
+margin_right = 88.0
+margin_bottom = 16.0
+
+[node name="Label" type="Label" parent="CanvasLayer/Score/LabelAnchor"]
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = -80.0
+margin_top = -16.0
+margin_right = 80.0
+margin_bottom = 8.0
+custom_fonts/font = SubResource( 18 )
+text = "Score"
+align = 1
+valign = 1
+
+[node name="TextureProgress" type="TextureProgress" parent="CanvasLayer/Score"]
+self_modulate = Color( 0.0980392, 0.768627, 1, 1 )
+material = SubResource( 24 )
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = 40.0
+margin_top = 20.0
+margin_right = -8.0
+margin_bottom = 65.0
+rect_scale = Vector2( 0.75, 0.539 )
+value = 50.0
+texture_progress = ExtResource( 6 )
+fill_mode = 6
+nine_patch_stretch = true
+
+[node name="MutiAnchor" type="Control" parent="CanvasLayer/Score"]
+margin_left = 88.0
+margin_top = 40.0
+margin_right = 88.0
+margin_bottom = 40.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MultiplierLabel" type="Label" parent="CanvasLayer/Score/MutiAnchor"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -88.0
+margin_top = -8.0
+margin_right = 88.0
+margin_bottom = 16.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource( 17 )
+custom_fonts/font = ExtResource( 2 )
+text = "MultiX"
+align = 1
+valign = 1

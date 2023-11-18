@@ -1,0 +1,318 @@
+[gd_scene load_steps=46 format=2]
+
+[ext_resource path="res://nodes/manager/ScoreboardManager.tscn" type="PackedScene" id=1]
+[ext_resource path="res://scripts/main/Main.gd" type="Script" id=2]
+[ext_resource path="res://scripts/main/manager/WaveManager.gd" type="Script" id=3]
+[ext_resource path="res://scripts/main/manager/TimerManager.gd" type="Script" id=4]
+[ext_resource path="res://scripts/main/manager/MainCamera.gd" type="Script" id=5]
+[ext_resource path="res://scripts/environment/Environment_Foreground.gd" type="Script" id=6]
+[ext_resource path="res://assets/audio/managers/scoremanager/snd_combo_levelup.wav" type="AudioStream" id=7]
+[ext_resource path="res://assets/sprites/mask.png" type="Texture" id=8]
+[ext_resource path="res://scripts/main/manager/ItemDropManager.gd" type="Script" id=9]
+[ext_resource path="res://scripts/main/manager/HitstopManager.gd" type="Script" id=10]
+[ext_resource path="res://scripts/main/manager/GameoverManager.gd" type="Script" id=11]
+[ext_resource path="res://scripts/main/manager/ScoreManager.gd" type="Script" id=12]
+[ext_resource path="res://assets/sprites/mask4.png" type="Texture" id=13]
+[ext_resource path="res://assets/sprites/mask3.png" type="Texture" id=14]
+[ext_resource path="res://nodes/player/PlayerBase.tscn" type="PackedScene" id=15]
+[ext_resource path="res://nodes/ui/FinalScoreUI2.tscn" type="PackedScene" id=16]
+[ext_resource path="res://nodes/ui/HUD2.tscn" type="PackedScene" id=17]
+[ext_resource path="res://nodes/ui/PauseUI.tscn" type="PackedScene" id=18]
+[ext_resource path="res://scripts/main/manager/PauseManager.gd" type="Script" id=19]
+[ext_resource path="res://assets/sprites/spr_ScreenEdgeBorder.png" type="Texture" id=20]
+[ext_resource path="res://scripts/main/manager/ScreenEdgeManager.gd" type="Script" id=21]
+[ext_resource path="res://assets/audio/managers/screenedgemanager/snd_warningFaster.wav" type="AudioStream" id=22]
+[ext_resource path="res://assets/audio/managers/screenedgemanager/snd_warning.wav" type="AudioStream" id=23]
+[ext_resource path="res://nodes/enemy/CannonEnemy.tscn" type="PackedScene" id=24]
+[ext_resource path="res://nodes/enemy/RamEnemy.tscn" type="PackedScene" id=25]
+[ext_resource path="res://nodes/enemy/RapidfireCannonEnemy.tscn" type="PackedScene" id=26]
+[ext_resource path="res://nodes/enemy/HeatMissileEnemy.tscn" type="PackedScene" id=27]
+[ext_resource path="res://nodes/enemy/ShotgunEnemy.tscn" type="PackedScene" id=28]
+
+[sub_resource type="Environment" id=1]
+background_mode = 4
+tonemap_mode = 4
+dof_blur_near_distance = 1.15
+dof_blur_near_transition = 19.22
+dof_blur_near_amount = 1.0
+dof_blur_near_quality = 0
+glow_enabled = true
+glow_levels/5 = false
+glow_strength = 0.33
+glow_bloom = 0.3
+glow_blend_mode = 1
+adjustment_enabled = true
+adjustment_contrast = 0.9
+adjustment_saturation = 1.2
+
+[sub_resource type="Shader" id=33]
+code = "shader_type canvas_item;
+
+uniform float offset = 1.0f;
+uniform float CAStrength = 1.0f;
+void fragment(){
+	vec4 green_channel = texture(SCREEN_TEXTURE, SCREEN_UV);
+	vec4 red_channel = texture(SCREEN_TEXTURE, vec2(SCREEN_UV.x + (offset * SCREEN_PIXEL_SIZE.x), SCREEN_UV.y));
+	vec4 blue_channel = texture(SCREEN_TEXTURE, vec2(SCREEN_UV.x - (offset * SCREEN_PIXEL_SIZE.x), SCREEN_UV.y));
+	if (offset != 0.0f){
+		COLOR = vec4(red_channel.r * CAStrength, green_channel.g * CAStrength, blue_channel.b * CAStrength, 1.0f);
+	}
+}"
+
+[sub_resource type="ShaderMaterial" id=34]
+shader = SubResource( 33 )
+shader_param/offset = 0.0
+shader_param/CAStrength = 1.0
+
+[sub_resource type="CanvasItemMaterial" id=37]
+blend_mode = 1
+
+[sub_resource type="Shader" id=11]
+code = "shader_type canvas_item;
+
+uniform sampler2D gradient;
+uniform sampler2D noise;
+
+void fragment(){
+	vec2 textureUV = UV;
+	vec4 texture1 = texture(TEXTURE, textureUV);
+	
+	vec2 noiseUV = UV + (TIME * 0.05);
+	vec4 noise1 = texture(noise, noiseUV);
+	
+	float energy = texture1.r / (noise1.r * 0.1);
+	vec4 color = texture(gradient, vec2(energy));
+	COLOR = color;
+}"
+
+[sub_resource type="Gradient" id=12]
+offsets = PoolRealArray( 0.56129, 0.683871, 0.748387, 0.780645, 0.967742 )
+colors = PoolColorArray( 0, 0, 0, 0.839216, 1, 0.384314, 0.0823529, 0.976471, 1, 0.0823529, 0.0823529, 0.627451, 0, 0.701961, 0.815686, 0.839216, 1, 1, 1, 0 )
+
+[sub_resource type="GradientTexture" id=13]
+gradient = SubResource( 12 )
+
+[sub_resource type="OpenSimplexNoise" id=15]
+octaves = 1
+period = 0.1
+
+[sub_resource type="NoiseTexture" id=16]
+noise = SubResource( 15 )
+
+[sub_resource type="ShaderMaterial" id=14]
+shader = SubResource( 11 )
+shader_param/gradient = SubResource( 13 )
+shader_param/noise = SubResource( 16 )
+
+[sub_resource type="Shader" id=4]
+code = "shader_type canvas_item;
+
+uniform float scale = 4.0;
+
+
+uniform vec2 scroll1 = vec2(1, 1);
+uniform vec2 scroll2 = vec2(-1, -1);
+uniform float scrollSpeed = 0.5;
+uniform sampler2D colorTexture;
+uniform sampler2D noise2;
+uniform sampler2D noise3;
+
+void fragment(){
+	vec2 textureUV = UV * scale;
+	vec4 texture1 = texture(TEXTURE, textureUV + TIME * scroll1 * scrollSpeed);
+	
+	vec2 noiseUV = textureUV;
+	noiseUV.x += sin(TIME) * sin(noiseUV.y) * 0.2;
+	vec4 noiseTexture = texture(noise2, noiseUV + TIME * scroll2 * scrollSpeed * 2.0);
+	
+	
+	vec2 noiseSubtractorUV = textureUV;
+	noiseSubtractorUV.x -= sin(TIME) * sin(noiseUV.y) * -0.2;
+	vec4 noiseSubtractorTexture = texture(noise3, noiseSubtractorUV + TIME * scroll1 * scrollSpeed);
+	
+//	float energy = texture1.r * ((noiseTexture.r + noiseSubtractorTexture.r) * 0.5);
+	float noiseEnergy = noiseTexture.r * 0.5;
+	float energy = texture1.r * noiseEnergy;
+	vec4 color = texture(colorTexture, vec2(energy));
+	COLOR = color;
+}"
+
+[sub_resource type="Gradient" id=5]
+offsets = PoolRealArray( 0.083871, 0.167742, 0.303226, 0.380645, 0.670968, 0.903226 )
+colors = PoolColorArray( 0.0705882, 0.054902, 0.129412, 1, 0.227451, 0.0941176, 0.290196, 1, 0.0872803, 0.373511, 0.429688, 1, 0.269531, 0.0621185, 0.183649, 1, 0.227451, 0.0941176, 0.290196, 1, 0.0214272, 0.0450823, 0.133789, 1 )
+
+[sub_resource type="GradientTexture" id=6]
+gradient = SubResource( 5 )
+
+[sub_resource type="OpenSimplexNoise" id=35]
+period = 36.5
+persistence = 0.113
+lacunarity = 2.64
+
+[sub_resource type="NoiseTexture" id=36]
+noise = SubResource( 35 )
+
+[sub_resource type="ShaderMaterial" id=7]
+shader = SubResource( 4 )
+shader_param/scale = 20.0
+shader_param/scroll1 = Vector2( 1, 2 )
+shader_param/scroll2 = Vector2( -1, -1 )
+shader_param/scrollSpeed = 0.05
+shader_param/colorTexture = SubResource( 6 )
+shader_param/noise2 = ExtResource( 14 )
+shader_param/noise3 = SubResource( 36 )
+
+[sub_resource type="ShaderMaterial" id=30]
+
+[node name="Main" type="Node2D"]
+position = Vector2( -1, 3 )
+script = ExtResource( 2 )
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource( 1 )
+
+[node name="HUD" parent="." instance=ExtResource( 17 )]
+
+[node name="Managers" type="Node2D" parent="."]
+
+[node name="TimerManager" type="Node2D" parent="Managers"]
+script = ExtResource( 4 )
+
+[node name="WaveManager" type="Node2D" parent="Managers"]
+position = Vector2( 2, 0 )
+script = ExtResource( 3 )
+spawnableEnemies = [ ExtResource( 25 ), ExtResource( 24 ), ExtResource( 26 ), ExtResource( 27 ), ExtResource( 28 ) ]
+
+[node name="SpawnPoint" type="Position2D" parent="Managers/WaveManager"]
+position = Vector2( 375, 375 )
+
+[node name="ItemDropManager" type="Node2D" parent="Managers"]
+script = ExtResource( 9 )
+
+[node name="ScoreManager" type="Node2D" parent="Managers"]
+script = ExtResource( 12 )
+ComboLevelUpSFX = ExtResource( 7 )
+
+[node name="LevelUpSFX" type="AudioStreamPlayer" parent="Managers/ScoreManager"]
+stream = ExtResource( 7 )
+
+[node name="GameoverManager" type="Node2D" parent="Managers"]
+position = Vector2( -2, -1 )
+script = ExtResource( 11 )
+
+[node name="FinalScoreUI" parent="Managers/GameoverManager" instance=ExtResource( 16 )]
+
+[node name="HitstopManager" type="Node2D" parent="Managers"]
+script = ExtResource( 10 )
+chromaticAbberation_Strength = 1.1
+
+[node name="ChromaticAbberationBox" type="ColorRect" parent="Managers/HitstopManager"]
+material = SubResource( 34 )
+margin_right = 777.0
+margin_bottom = 777.0
+color = Color( 1, 1, 1, 0 )
+
+[node name="ScoreboardManager" parent="Managers" instance=ExtResource( 1 )]
+
+[node name="PauseManager" type="Node2D" parent="Managers"]
+pause_mode = 2
+script = ExtResource( 19 )
+
+[node name="PauseUI" parent="Managers/PauseManager" instance=ExtResource( 18 )]
+
+[node name="ScreenEdgeManager" type="Node2D" parent="Managers"]
+position = Vector2( 0, -1 )
+script = ExtResource( 21 )
+blinkTime = 0.5
+sndWarning = ExtResource( 23 )
+sndWarningFast = ExtResource( 22 )
+
+[node name="Control" type="Control" parent="Managers/ScreenEdgeManager"]
+margin_left = 1.0
+margin_top = -3.0
+margin_right = 641.0
+margin_bottom = 317.0
+
+[node name="CanvasLayer" type="CanvasLayer" parent="Managers/ScreenEdgeManager/Control"]
+
+[node name="Sprite" type="Sprite" parent="Managers/ScreenEdgeManager/Control/CanvasLayer"]
+material = SubResource( 37 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 20 )
+centered = false
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Managers/ScreenEdgeManager"]
+
+[node name="MainCamera" type="Camera2D" parent="."]
+rotating = true
+current = true
+smoothing_enabled = true
+editor_draw_limits = true
+script = ExtResource( 5 )
+
+[node name="Anchor" type="Position2D" parent="."]
+position = Vector2( 375, 375 )
+
+[node name="Environment" type="Node2D" parent="."]
+
+[node name="Foreground" type="Node2D" parent="Environment"]
+z_index = 10
+script = ExtResource( 6 )
+
+[node name="PlayareaBorder" type="Sprite" parent="Environment/Foreground"]
+material = SubResource( 14 )
+position = Vector2( 375, 375 )
+texture = ExtResource( 13 )
+
+[node name="Background" type="Control" parent="Environment"]
+margin_right = 768.0
+margin_bottom = 768.0
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="Environment/Background"]
+scroll_ignore_camera_zoom = true
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="Environment/Background/ParallaxBackground"]
+motion_scale = Vector2( 1.2, 1.2 )
+
+[node name="Sprite" type="Sprite" parent="Environment/Background/ParallaxBackground/ParallaxLayer"]
+material = SubResource( 7 )
+position = Vector2( 392, 488 )
+scale = Vector2( 20, 20 )
+texture = ExtResource( 8 )
+
+[node name="CenterLine" type="Control" parent="Environment/Background"]
+modulate = Color( 1, 1, 1, 0.282353 )
+material = SubResource( 30 )
+margin_right = 768.0
+margin_bottom = 768.0
+
+[node name="Line2D" type="Line2D" parent="Environment/Background/CenterLine"]
+position = Vector2( 0, -8 )
+points = PoolVector2Array( 0, 384, 768, 384 )
+width = 1.0
+default_color = Color( 0.152941, 0.85098, 0.996078, 1 )
+
+[node name="Line2D2" type="Line2D" parent="Environment/Background/CenterLine"]
+points = PoolVector2Array( 376, 760, 376, -16 )
+width = 1.0
+default_color = Color( 0.152941, 0.85098, 0.996078, 1 )
+
+[node name="Player" parent="." instance=ExtResource( 15 )]
+position = Vector2( 384, 576 )
+Anchor = NodePath("../Anchor")
+wallProximity_Timeout = 3.0
+
+[connection signal="timeLimit_met" from="Managers/TimerManager" to="Managers/GameoverManager" method="_on_TimerManager_timeLimit_met"]
+[connection signal="update_multiLevel" from="Managers/ScoreManager" to="HUD" method="set_Multi"]
+[connection signal="update_score" from="Managers/ScoreManager" to="HUD" method="set_Score"]
+[connection signal="recieved_finalscore" from="Managers/GameoverManager" to="Managers/ScoreboardManager" method="_on_GameoverManager_recieved_finalscore"]
+[connection signal="replay_game" from="Managers/GameoverManager/FinalScoreUI" to="." method="_on_FinalScoreUI_replay_game"]
+[connection signal="return_to_menu" from="Managers/GameoverManager/FinalScoreUI" to="." method="_on_FinalScoreUI_return_to_menu"]
+[connection signal="quit_pressed" from="Managers/PauseManager/PauseUI" to="Managers/PauseManager" method="_on_PauseUI_quit_pressed"]
+[connection signal="restart_pressed" from="Managers/PauseManager/PauseUI" to="Managers/PauseManager" method="_on_PauseUI_restart_pressed"]
+[connection signal="resume_pressed" from="Managers/PauseManager/PauseUI" to="Managers/PauseManager" method="_on_PauseUI_resume_pressed"]
+[connection signal="player_dead" from="Player" to="Managers/GameoverManager" method="gameover"]
+[connection signal="update_HP" from="Player" to="HUD" method="set_HP"]
+[connection signal="update_HP" from="Player" to="Managers/ScoreManager" method="_on_Player_update_HP"]
+[connection signal="weapon_levelup" from="Player" to="HUD" method="set_WeaponLevel"]
+[connection signal="weapon_xpGain" from="Player" to="HUD" method="set_WeaponXPRate"]

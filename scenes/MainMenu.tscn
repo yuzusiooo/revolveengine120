@@ -1,0 +1,265 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://scripts/mainmenu/MainMenu.gd" type="Script" id=1]
+[ext_resource path="res://scripts/mainmenu/MenuUI2.gd" type="Script" id=2]
+[ext_resource path="res://nodes/manager/ScoreboardManager.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scripts/mainmenu/HighscoreRecord.gd" type="Script" id=4]
+[ext_resource path="res://assets/themes/default.theme" type="Theme" id=5]
+[ext_resource path="res://nodes/vfx/Background.tscn" type="PackedScene" id=6]
+[ext_resource path="res://assets/themes/big_text.theme" type="Theme" id=7]
+[ext_resource path="res://assets/sprites/spr_titleArtwork1.png" type="Texture" id=8]
+[ext_resource path="res://assets/audio/UI/snd_buttonPress.wav" type="AudioStream" id=9]
+[ext_resource path="res://assets/audio/UI/snd_select.wav" type="AudioStream" id=10]
+
+[sub_resource type="Shader" id=6]
+code = "shader_type canvas_item;
+
+uniform float wave_speed = 3.0; //wave loop speed
+uniform float wave_freq = 10.0; //wave vertical freq
+uniform float wave_width = 1; //wave width 
+void fragment(){
+	vec2 scale_UV = UV;
+	vec2 wave_uv_offset;
+	wave_uv_offset.x = cos((TIME*wave_speed)+UV.x+UV.y*wave_freq*2.0)*wave_width*0.01;
+	COLOR = texture(TEXTURE,scale_UV+wave_uv_offset);
+	
+	
+}"
+
+[sub_resource type="ShaderMaterial" id=7]
+shader = SubResource( 6 )
+shader_param/wave_speed = 30.0
+shader_param/wave_freq = 500.0
+shader_param/wave_width = 1.0
+
+[node name="MainMenu" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="ScoreboardManager" parent="." instance=ExtResource( 3 )]
+
+[node name="Background" parent="." instance=ExtResource( 6 )]
+
+[node name="TitleIllustration" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 315.0
+margin_right = 640.0
+margin_bottom = 319.0
+rect_min_size = Vector2( 1.061, 0 )
+
+[node name="SpriteBack" type="Sprite" parent="TitleIllustration"]
+modulate = Color( 0.568627, 0, 0, 1 )
+material = SubResource( 7 )
+position = Vector2( 2, 1 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 8 )
+centered = false
+
+[node name="SpriteFront" type="Sprite" parent="TitleIllustration"]
+modulate = Color( 1, 1, 1, 0.796078 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 8 )
+centered = false
+
+[node name="Control" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="CanvasLayer" type="CanvasLayer" parent="Control"]
+
+[node name="Title" type="Control" parent="Control/CanvasLayer"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -128.0
+margin_top = 8.0
+margin_right = 128.0
+margin_bottom = 168.0
+
+[node name="Label" type="Label" parent="Control/CanvasLayer/Title"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_bottom = -58.0
+theme = ExtResource( 7 )
+text = "Revolve
+Engine
+120"
+align = 1
+valign = 1
+uppercase = true
+
+[node name="VersionNumber" type="Label" parent="Control/CanvasLayer/Title"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -129.0
+margin_top = -61.0
+margin_right = 127.0
+margin_bottom = -26.0
+theme = ExtResource( 5 )
+text = "Version number
+Diskmachine 2022"
+align = 1
+valign = 1
+
+[node name="MenuUI" type="Control" parent="Control/CanvasLayer"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -304.0
+margin_top = -272.0
+margin_right = -128.0
+margin_bottom = -32.0
+theme = ExtResource( 5 )
+script = ExtResource( 2 )
+ButtonSound = NodePath("ButtonSound")
+sndSelect = ExtResource( 10 )
+sndPress = ExtResource( 9 )
+UIButtons = [ NodePath("MenuVBox/PlayButton"), NodePath("MenuVBox/ReadMeButton"), NodePath("MenuVBox/OptionsButton"), NodePath("QuitButton") ]
+Descriptor = NodePath("DescriptorLabel")
+
+[node name="MenuVBox" type="VBoxContainer" parent="Control/CanvasLayer/MenuUI"]
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_top = -56.0
+margin_bottom = 72.0
+custom_constants/separation = 10
+alignment = 1
+
+[node name="PlayButton" type="Button" parent="Control/CanvasLayer/MenuUI/MenuVBox"]
+margin_top = 33.0
+margin_right = 176.0
+margin_bottom = 47.0
+focus_neighbour_bottom = NodePath("../ReadMeButton")
+text = "Play"
+
+[node name="ReadMeButton" type="Button" parent="Control/CanvasLayer/MenuUI/MenuVBox"]
+margin_top = 57.0
+margin_right = 176.0
+margin_bottom = 71.0
+focus_neighbour_top = NodePath("../PlayButton")
+focus_neighbour_bottom = NodePath("../../QuitButton")
+text = "ReadMe"
+
+[node name="OptionsButton" type="Button" parent="Control/CanvasLayer/MenuUI/MenuVBox"]
+margin_top = 81.0
+margin_right = 176.0
+margin_bottom = 95.0
+focus_neighbour_top = NodePath("../PlayButton")
+focus_neighbour_bottom = NodePath("../SendFeedbackButton")
+text = "Options"
+
+[node name="SendFeedbackButton" type="Button" parent="Control/CanvasLayer/MenuUI/MenuVBox"]
+visible = false
+margin_top = 69.0
+margin_right = 176.0
+margin_bottom = 83.0
+focus_neighbour_top = NodePath("../OptionsButton")
+focus_neighbour_bottom = NodePath("../../QuitButton")
+text = "Send Feedback"
+
+[node name="DescriptorLabel" type="Label" parent="Control/CanvasLayer/MenuUI"]
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_top = -96.0
+margin_bottom = -57.0
+text = "Descriptor text"
+align = 1
+valign = 1
+autowrap = true
+
+[node name="QuitButton" type="Button" parent="Control/CanvasLayer/MenuUI"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -44.0
+margin_top = -20.0
+margin_right = 44.0
+margin_bottom = 15.0
+focus_neighbour_top = NodePath("../MenuVBox/ReadMeButton")
+text = "Quit"
+
+[node name="ButtonSound" type="AudioStreamPlayer" parent="Control/CanvasLayer/MenuUI"]
+stream = ExtResource( 10 )
+
+[node name="HighscoreRecord" type="Control" parent="Control/CanvasLayer"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -96.0
+margin_top = -136.0
+margin_right = 96.0
+theme = ExtResource( 5 )
+script = ExtResource( 4 )
+
+[node name="Label" type="Label" parent="Control/CanvasLayer/HighscoreRecord"]
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_top = -68.0
+margin_bottom = -46.0
+text = "HighScores"
+align = 1
+
+[node name="Scores" type="Control" parent="Control/CanvasLayer/HighscoreRecord"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 24.0
+margin_right = -8.0
+margin_bottom = -8.0
+
+[node name="First" type="Label" parent="Control/CanvasLayer/HighscoreRecord/Scores"]
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_top = -48.0
+margin_bottom = -34.0
+text = "11111"
+align = 1
+valign = 1
+
+[node name="Second" type="Label" parent="Control/CanvasLayer/HighscoreRecord/Scores"]
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_top = -24.0
+margin_bottom = -10.0
+text = "22222"
+align = 1
+valign = 1
+
+[node name="Third" type="Label" parent="Control/CanvasLayer/HighscoreRecord/Scores"]
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_bottom = 14.0
+text = "33333"
+align = 1
+valign = 1
+
+[node name="Fourth" type="Label" parent="Control/CanvasLayer/HighscoreRecord/Scores"]
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_top = 24.0
+margin_bottom = 38.0
+text = "44444"
+align = 1
+valign = 1
+
+[node name="Fifth" type="Label" parent="Control/CanvasLayer/HighscoreRecord/Scores"]
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_top = 40.0
+margin_bottom = 54.0
+text = "55555"
+align = 1
+valign = 1
+
+[connection signal="button_pressed" from="Control/CanvasLayer/MenuUI" to="." method="_on_MenuUI_button_pressed"]

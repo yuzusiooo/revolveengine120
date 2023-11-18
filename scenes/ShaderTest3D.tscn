@@ -1,0 +1,52 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://scripts/ShaderTest.gd" type="Script" id=1]
+
+[sub_resource type="PlaneMesh" id=3]
+subdivide_width = 32
+subdivide_depth = 32
+
+[sub_resource type="Shader" id=7]
+code = "shader_type spatial;
+
+uniform sampler2D noise;
+uniform float height_scale = 0.5;
+
+uniform sampler2D normalmap;
+varying vec2 tex_position;
+
+void vertex(){
+	// offsetting mesh vertex's y position by cos vertex.x and sin vertex.z
+//	VERTEX.y += cos(VERTEX.x * 4.0) * sin(VERTEX.z * 4.0);
+	
+//	float height = texture(noise, VERTEX.xz, / 2.0 + 0.5).x;
+	tex_position = VERTEX.xz / 2.0 + 0.5;
+	float height = texture(noise, tex_position).x;
+	VERTEX.y += height * height_scale;
+}
+
+void fragment(){
+	NORMALMAP = texture(normalmap, tex_position).xyz;
+}"
+
+[sub_resource type="OpenSimplexNoise" id=6]
+
+[sub_resource type="NoiseTexture" id=8]
+noise = SubResource( 6 )
+
+[sub_resource type="NoiseTexture" id=10]
+as_normalmap = true
+
+[sub_resource type="ShaderMaterial" id=5]
+shader = SubResource( 7 )
+shader_param/height_scale = 0.447
+shader_param/noise = SubResource( 8 )
+shader_param/normalmap = SubResource( 10 )
+
+[node name="MeshInstance" type="MeshInstance"]
+mesh = SubResource( 3 )
+material/0 = SubResource( 5 )
+script = ExtResource( 1 )
+
+[node name="OmniLight" type="OmniLight" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.46159, 0 )

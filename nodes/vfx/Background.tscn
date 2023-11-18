@@ -1,0 +1,73 @@
+[gd_scene load_steps=9 format=2]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+
+uniform float scale = 4.0;
+uniform sampler2D backgroundGradient;
+uniform vec2 scroll1 = vec2(1, 1);
+
+uniform sampler2D noise2;
+uniform float fireHeight:hint_range(0.0, 1.0);
+
+void fragment(){
+	vec2 textureUV = UV * scale;
+	vec4 texture1 = texture(TEXTURE, textureUV + TIME * scroll1);
+	
+	vec2 noiseUV = textureUV;
+	vec4 noise1 = texture(noise2, noiseUV + TIME * (scroll1 * -1.0));
+	
+	float energy = texture1.r + (noise1.r * 0.5) - (1.0 - UV.y) * fireHeight;
+	
+	vec4 color = texture(backgroundGradient, vec2(energy));
+	COLOR = color;
+}"
+
+[sub_resource type="Gradient" id=3]
+offsets = PoolRealArray( 0.367742, 0.509677, 0.825806, 0.974194 )
+colors = PoolColorArray( 1, 1, 1, 0, 0.227451, 0.0941176, 0.290196, 1, 0.662745, 0.0431373, 0.290196, 1, 0.128143, 0.749132, 0.964844, 1 )
+
+[sub_resource type="GradientTexture" id=4]
+gradient = SubResource( 3 )
+
+[sub_resource type="OpenSimplexNoise" id=7]
+octaves = 1
+period = 35.0
+persistence = 0.0
+lacunarity = 4.0
+
+[sub_resource type="NoiseTexture" id=8]
+width = 64
+height = 64
+noise = SubResource( 7 )
+
+[sub_resource type="ShaderMaterial" id=2]
+shader = SubResource( 1 )
+shader_param/scale = 3.5
+shader_param/scroll1 = Vector2( 0.5, 1 )
+shader_param/fireHeight = 0.726
+shader_param/backgroundGradient = SubResource( 4 )
+shader_param/noise2 = SubResource( 8 )
+
+[sub_resource type="OpenSimplexNoise" id=5]
+period = 68.8
+persistence = 0.486
+lacunarity = 4.0
+
+[sub_resource type="NoiseTexture" id=6]
+width = 511
+noise = SubResource( 5 )
+
+[node name="Background" type="Node2D"]
+
+[node name="ColorRect" type="ColorRect" parent="."]
+margin_right = 640.0
+margin_bottom = 320.0
+color = Color( 0.0705882, 0.054902, 0.129412, 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+modulate = Color( 0.352941, 0.270588, 0.6, 1 )
+material = SubResource( 2 )
+scale = Vector2( 1.25, 0.625 )
+texture = SubResource( 6 )
+centered = false

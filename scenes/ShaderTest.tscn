@@ -1,0 +1,39 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://icon.png" type="Texture" id=1]
+[ext_resource path="res://scripts/ShaderTest.gd" type="Script" id=2]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+
+uniform float blue = 1.0;
+
+
+void fragment(){
+	// change color of the mesh to assigned vec4 color
+	COLOR = vec4(0.4, 0.6, 0.9, 1.0);
+	
+	// use UV as the color to assign
+	COLOR = vec4(UV, 0.5, 1.0);
+	
+	// take the texture of the sprite and change b value to the uniform variable
+//	COLOR = texture(TEXTURE, UV);
+//	COLOR.b = blue;
+}
+
+void vertex(){
+	// offset each vertex.x position by 10
+	VERTEX += vec2(10.0, 0);
+	
+	// using cos and sin (values that oscillates from -1 to 1) with TIME for animation
+	VERTEX += vec2(cos(TIME) * 100.0, sin(TIME) * 100.0);
+}"
+
+[sub_resource type="ShaderMaterial" id=2]
+shader = SubResource( 1 )
+shader_param/blue = 1.0
+
+[node name="Sprite" type="Sprite"]
+material = SubResource( 2 )
+texture = ExtResource( 1 )
+script = ExtResource( 2 )

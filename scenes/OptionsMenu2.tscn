@@ -1,0 +1,79 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://assets/themes/default.theme" type="Theme" id=1]
+[ext_resource path="res://nodes/vfx/Background.tscn" type="PackedScene" id=2]
+[ext_resource path="res://nodes/manager/ScoreboardManager.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scripts/optionsmenu/OptionsUI.gd" type="Script" id=4]
+[ext_resource path="res://scripts/optionsmenu/OptionsMenu2.gd" type="Script" id=7]
+[ext_resource path="res://assets/audio/UI/snd_select.wav" type="AudioStream" id=9]
+[ext_resource path="res://assets/audio/UI/snd_buttonPress.wav" type="AudioStream" id=10]
+
+[node name="OptionsMenu" type="Node2D"]
+script = ExtResource( 7 )
+
+[node name="Background" parent="." instance=ExtResource( 2 )]
+
+[node name="OptionsUI" type="Control" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = 16.0
+margin_top = 48.0
+margin_right = 256.0
+margin_bottom = 288.0
+theme = ExtResource( 1 )
+script = ExtResource( 4 )
+ButtonSound = NodePath("ButtonSound")
+sndSelect = ExtResource( 9 )
+sndPress = ExtResource( 10 )
+UIButtons = [ NodePath("MenuVBox/ToggleFullscreen"), NodePath("MenuVBox/ControlMode"), NodePath("MenuVBox/ResetScoreboard"), NodePath("MenuVBox/SendFeedback"), NodePath("Return") ]
+DefaultButton = NodePath("Return")
+
+[node name="MenuVBox" type="VBoxContainer" parent="OptionsUI"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/separation = 10
+alignment = 1
+
+[node name="ToggleFullscreen" type="Button" parent="OptionsUI/MenuVBox"]
+margin_top = 77.0
+margin_right = 240.0
+margin_bottom = 91.0
+text = "Toggle Fullscreen"
+
+[node name="ControlMode" type="Button" parent="OptionsUI/MenuVBox"]
+margin_top = 101.0
+margin_right = 240.0
+margin_bottom = 115.0
+text = "Control Mode: 8-Way"
+
+[node name="ResetScoreboard" type="Button" parent="OptionsUI/MenuVBox"]
+margin_top = 125.0
+margin_right = 240.0
+margin_bottom = 139.0
+text = "Reset Scoreboard"
+
+[node name="SendFeedback" type="Button" parent="OptionsUI/MenuVBox"]
+margin_top = 149.0
+margin_right = 240.0
+margin_bottom = 163.0
+text = "Send Feedback"
+
+[node name="Return" type="Button" parent="OptionsUI"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -44.0
+margin_top = -20.0
+margin_right = 44.0
+margin_bottom = 15.0
+text = "Return"
+
+[node name="ButtonSound" type="AudioStreamPlayer" parent="OptionsUI"]
+stream = ExtResource( 9 )
+
+[node name="ScoreboardManager" parent="." instance=ExtResource( 3 )]
+
+[connection signal="button_pressed" from="OptionsUI" to="." method="_on_OptionsUI_button_pressed"]

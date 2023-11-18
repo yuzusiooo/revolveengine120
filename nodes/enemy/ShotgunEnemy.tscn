@@ -1,0 +1,110 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://shader/Enemy_Shader.material" type="Material" id=1]
+[ext_resource path="res://assets/audio/enemy/snd_enemy_attackRanged2.wav" type="AudioStream" id=2]
+[ext_resource path="res://assets/audio/enemy/snd_enemy_hit2.wav" type="AudioStream" id=3]
+[ext_resource path="res://assets/audio/enemy/snd_enemy_dead3.wav" type="AudioStream" id=4]
+[ext_resource path="res://scripts/enemy/ShotgunEnemy.gd" type="Script" id=5]
+[ext_resource path="res://assets/sprites/SS_CannonEnemyBarrel.png" type="Texture" id=6]
+[ext_resource path="res://assets/sprites/spr_CannonEnemyLegs.png" type="Texture" id=7]
+[ext_resource path="res://icon.png" type="Texture" id=8]
+[ext_resource path="res://nodes/enemy/CannonEnemyBullet.tscn" type="PackedScene" id=9]
+
+[sub_resource type="CapsuleShape2D" id=1]
+radius = 12.0
+height = 12.0
+
+[sub_resource type="Animation" id=2]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Barrel:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0 ]
+}
+
+[sub_resource type="Animation" id=3]
+resource_name = "cannon_fire"
+length = 0.5
+step = 0.0416667
+tracks/0/type = "value"
+tracks/0/path = NodePath("Barrel:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.0416667, 0.0833333, 0.25, 0.333333, 0.375 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 1, 2, 3, 3, 2, 1 ]
+}
+tracks/1/type = "method"
+tracks/1/path = NodePath("../AttackSound")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0.084 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [ 0.0 ],
+"method": "play"
+} ]
+}
+
+[node name="ShotgunEnemy" type="Node2D" groups=["Enemy"]]
+script = ExtResource( 5 )
+itemDropTable = [ [ 4.0, "WeaponGem" ], [ 3.0, "Medal" ], [ 6.0, "None" ] ]
+HitSFX = NodePath("Hitbox/AudioStreamPlayer")
+HitSFX_Stream = ExtResource( 3 )
+DeadSFX_Stream = ExtResource( 4 )
+AttackSFX = NodePath("AttackSound")
+AttackSFX_Stream = ExtResource( 2 )
+tscnBullet = ExtResource( 9 )
+multiShotCount = 5
+bulletSpeed = 400.0
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 8
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+position = Vector2( 3, 0 )
+rotation = 1.5708
+shape = SubResource( 1 )
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Hitbox"]
+
+[node name="Sprite" type="Sprite" parent="."]
+scale = Vector2( 0.375, 0.375 )
+texture = ExtResource( 8 )
+
+[node name="SpriteAnchor" type="Node2D" parent="."]
+
+[node name="Legs" type="Sprite" parent="SpriteAnchor"]
+modulate = Color( 0.47451, 0.619608, 0.929412, 1 )
+material = ExtResource( 1 )
+texture = ExtResource( 7 )
+
+[node name="Barrel" type="Sprite" parent="SpriteAnchor"]
+modulate = Color( 0.768627, 0, 0, 1 )
+material = ExtResource( 1 )
+position = Vector2( 2, 0 )
+texture = ExtResource( 6 )
+hframes = 4
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="SpriteAnchor"]
+autoplay = "RESET"
+anims/RESET = SubResource( 2 )
+anims/cannon_fire = SubResource( 3 )
+
+[node name="AttackSound" type="AudioStreamPlayer2D" parent="."]
+volume_db = -2.0

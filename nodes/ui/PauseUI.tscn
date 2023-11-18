@@ -1,0 +1,93 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://assets/themes/big_text.theme" type="Theme" id=1]
+[ext_resource path="res://assets/themes/default.theme" type="Theme" id=2]
+[ext_resource path="res://nodes/vfx/Background.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scripts/ui/PauseUI.gd" type="Script" id=4]
+[ext_resource path="res://assets/audio/UI/snd_select.wav" type="AudioStream" id=5]
+[ext_resource path="res://assets/audio/UI/snd_buttonPress.wav" type="AudioStream" id=6]
+
+[node name="PauseUI" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 4 )
+sndSelect = ExtResource( 5 )
+sndPress = ExtResource( 6 )
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+visible = false
+
+[node name="Background" parent="CanvasLayer" instance=ExtResource( 3 )]
+modulate = Color( 1, 1, 1, 0.392157 )
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+margin_right = 640.0
+margin_bottom = 64.0
+color = Color( 0.0705882, 0.054902, 0.129412, 0.901961 )
+
+[node name="ResultText" type="Label" parent="CanvasLayer/ColorRect"]
+anchor_right = 1.0
+margin_left = 128.0
+margin_right = -128.0
+margin_bottom = 64.0
+theme = ExtResource( 1 )
+text = "- PAUSE -"
+align = 1
+valign = 1
+
+[node name="ColorRect2" type="ColorRect" parent="CanvasLayer"]
+margin_left = 192.0
+margin_top = 104.0
+margin_right = 448.0
+margin_bottom = 240.0
+color = Color( 0.0705882, 0.054902, 0.129412, 0.901961 )
+
+[node name="Control" type="Control" parent="CanvasLayer/ColorRect2"]
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 248.0
+margin_bottom = 88.0
+theme = ExtResource( 2 )
+
+[node name="ResumeButton" type="Button" parent="CanvasLayer/ColorRect2/Control"]
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = 8.0
+margin_top = -32.0
+margin_right = -8.0
+margin_bottom = -9.0
+focus_neighbour_bottom = NodePath("../RestartButton")
+text = "RESUME"
+
+[node name="RestartButton" type="Button" parent="CanvasLayer/ColorRect2/Control"]
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = 8.0
+margin_top = 8.0
+margin_right = -8.0
+margin_bottom = 31.0
+focus_neighbour_top = NodePath("../ResumeButton")
+focus_neighbour_bottom = NodePath("../QuitButton")
+text = "RESTART"
+
+[node name="QuitButton" type="Button" parent="CanvasLayer/ColorRect2/Control"]
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = 8.0
+margin_top = 48.0
+margin_right = -8.0
+margin_bottom = 71.0
+focus_neighbour_top = NodePath("../RestartButton")
+text = "QUIT"
+
+[node name="ButtonSound" type="AudioStreamPlayer" parent="."]
+
+[connection signal="focus_entered" from="CanvasLayer/ColorRect2/Control/ResumeButton" to="." method="button_focus_entered"]
+[connection signal="pressed" from="CanvasLayer/ColorRect2/Control/ResumeButton" to="." method="_on_ResumeButton_pressed"]
+[connection signal="focus_entered" from="CanvasLayer/ColorRect2/Control/RestartButton" to="." method="button_focus_entered"]
+[connection signal="pressed" from="CanvasLayer/ColorRect2/Control/RestartButton" to="." method="_on_RestartButton_pressed"]
+[connection signal="focus_entered" from="CanvasLayer/ColorRect2/Control/QuitButton" to="." method="button_focus_entered"]
+[connection signal="pressed" from="CanvasLayer/ColorRect2/Control/QuitButton" to="." method="_on_QuitButton_pressed"]
